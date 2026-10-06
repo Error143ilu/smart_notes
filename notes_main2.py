@@ -4,6 +4,8 @@ import json
 
 app = QApplication([])
 
+notes = []
+
 window = QWidget()
 window.setWindowTitle('Умные заметки')
 window.resize(900,600)
@@ -55,7 +57,7 @@ row_3.addWidget(btn_tag_add)
 row_3.addWidget(btn_tag_del)
 
 row_4 = QHBoxLayout()
-row_4.addWidget(btn_tag_serg)
+row_4.addWidget(btn_tag_search)
 
 col_2.addLayout(row_3)
 col_2.addLayout(row_4)
@@ -84,7 +86,7 @@ def save_note():
     if list_notes.selectedItems():
         key = list_notes.selectedItems()[0].text()
         notes[key]['текст']= field_text.toPlainText()
-        with open('notes_data.json','a',encoding = 'utf-8') as file:
+        with open('notes_data.json','w',encoding = 'utf-8') as file:
             json.dump(notes,file,sort_keys = True,ensure_ascii=False)
         print(notes)
     else:
@@ -134,7 +136,6 @@ def del_tag():
 #недописано
 
 def search_tag():
-    print(btn_tag_search.text())
     tag = field_tag.text()
     if btn_tag_search.text() == 'Искать по тегу' and tag:
         print(tag)
@@ -147,7 +148,7 @@ def search_tag():
         list_tags.clear()
         list_notes.addItems(notes_filtered)
         print(btn_tag_search.text())
-    elif btn_tag_search == 'Сбросить поиск':
+    elif btn_tag_search.text() == 'Сбросить поиск':
         field_tag.clear()
         list_notes.clear()
         list_tags.clear()
@@ -163,6 +164,7 @@ btn_note_save.clicked.connect(save_note)
 btn_note_del.clicked.connect(del_note)
 btn_tag_add.clicked.connect(add_tag)
 btn_tag_del.clicked.connect(del_tag)
+btn_tag_search.clicked.connect(search_tag)
 window.show()
 with open('notes_data.json','r',encoding = 'utf-8') as file:
     notes = json.load(file)
